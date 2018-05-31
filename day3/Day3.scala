@@ -3,13 +3,14 @@
 object Day3 {
 
   val input = io.Source.fromFile("input.txt")
-  val directions = try input.mkString finally input.close()
+  val directions = try input.mkString.toList finally input.close()
 
-    def part1(visited: Set[Coord], current: Coord, directions: String):  Set[Coord] = directions match {
-      case x if x.startsWith("^") => part1(visited + current, current.up, x.tail)
-      case x if x.startsWith("v") => part1(visited + current, current.down, x.tail)
-      case x if x.startsWith("<") => part1(visited + current, current.left, x.tail)
-      case x if x.startsWith(">") => part1(visited + current, current.right, x.tail)
+  def part1(visited: Set[Coord], current: Coord, directions: List[Char]):  Set[Coord] =
+    directions match {
+      case '^' :: tail => part1(visited + current, current.up, tail)
+      case 'v' :: tail => part1(visited + current, current.down, tail)
+      case '<' :: tail => part1(visited + current, current.left, tail)
+      case '>' :: tail => part1(visited + current, current.right, tail)
       case _ => visited + current // The string is empty
     }
 
@@ -18,6 +19,14 @@ object Day3 {
     def visited = part1(Set.empty[Coord], new Coord(0, 0), directions)
     println("Part 1: Santa visited " + visited.size + " houses.")
 
+    // Part 2: Hown many houses did Santa and Robo-Santa visit?
+    // Idea for zipWithIndex from:
+    // https://www.reddit.com/r/adventofcode/comments/3v8roh/day_3_solutions/cxlhg3j/
+    val santaDirections = directions.zipWithIndex.filter(x => x._2 % 2 == 0).map(x => x._1)
+    val roboDirections  = directions.zipWithIndex.filter(x => x._2 % 2 != 0).map(x => x._1)
+    val santaVisited = part1(Set.empty[Coord], new Coord(0, 0), santaDirections)
+    val roboVisited  = part1(Set.empty[Coord], new Coord(0, 0), roboDirections)
+    println("Part 2: Santa and Robo-Santa visited " + (santaVisited ++ roboVisited).size + " houses.")
   }
 }
 
