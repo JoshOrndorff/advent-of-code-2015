@@ -19,7 +19,7 @@ object Day3 {
     def visited = part1(Set.empty[Coord], new Coord(0, 0), directions)
     println("Part 1: Santa visited " + visited.size + " houses.")
 
-    // Part 2: Hown many houses did Santa and Robo-Santa visit?
+    // Part 2: How many houses did Santa and Robo-Santa visit?
     // Idea for zipWithIndex from:
     // https://www.reddit.com/r/adventofcode/comments/3v8roh/day_3_solutions/cxlhg3j/
     val santaDirections = directions.zipWithIndex.filter(x => x._2 % 2 == 0).map(x => x._1)
